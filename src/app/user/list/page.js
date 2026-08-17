@@ -1,5 +1,9 @@
+'use client';
+
 import {useEffect, useState} from "react";
 import useListData from "../../../hooks/userListData";
+import DataTable from "react-data-table-component";
+import { Spinner } from "reactstrap";
 
 export const tableColumns = [
     {
@@ -18,18 +22,38 @@ export default function UserList(){
     const [pageNumber, setPageNumber] = useState(1);
     const [pageSize, setPageSize] = useState(10);
 
-    const {getData, loading, data} = useListData(`user/get-user-page-list?pageNumber=${pageNumber-1}&pageSize=${pageSize}`);
+    const {getData, loading, data} =
+        useListData(`get-user-page-list?pageNumber=${pageNumber-1}&pageSize=${pageSize}`);
 
     useEffect(() => {
-        getData(`user/get-user-page-list?pageNumber=${pageNumber-1}&pageSize=${pageSize}`)
+        getData(`get-user-page-list?pageNumber=${pageNumber - 1}&pageSize=${pageSize}`);
     }, [pageSize, pageNumber]);
 
     const handlePageChange = async (page) => {
         setPageNumber(page);
     }
 
-    const handePerRowsChnage = async (newPerPage, page) => {
+    const handlePerRowsChange = async (newPerPage, page) => {
         setPageNumber(page);
         setPageSize(newPerPage);
-    }
+    };
+
+    return (
+        <>
+            {data != null && (<DataTable data = {data.users}
+                columns={tableColumns}
+                striped={true}
+                noHeader={true}
+                pagination
+                paginationServer
+                progressPending={loading}
+                paginationTotalRows={data.totalElements}
+                onChangePage={handlePageChange}
+                onChangeRowsPerPage={handlePerRowsChange}
+                progressComponent={<Spinner color="danger">Loading...</Spinner>}
+                highlightOnHover
+                />
+            )}
+        </>
+    );
 }

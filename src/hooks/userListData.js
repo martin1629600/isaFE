@@ -1,5 +1,7 @@
 import {useCallback, useState} from "react";
-import {Axios} from "axios";
+import { Axios } from "../core/httpClient";
+
+
 
 const useListData = (url) => {
     const [loading, setLoading] = useState(false);
