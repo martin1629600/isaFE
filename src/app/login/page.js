@@ -89,7 +89,7 @@ export default function Login() {
                                         "token",
                                         result.data
                                     );
-                                    router.push("/");
+                                    window.location.href = "/";
 
                                 })();
                             }}
