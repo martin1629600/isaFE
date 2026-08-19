@@ -1,16 +1,24 @@
 import axios from "axios";
 
 export const Axios = axios.create({
-    baseURL: "http://localhost:8080",
-    timeout: 150000000,
-    headers: {
-        'Content-Type': 'application/json',
-    }
-})
+    baseURL: "http://localhost:8080"
+});
 
-export const get = async(url, params) => {
-    return await Axios.get(url, {params})
-}
-export const post = async(url, params) => {
-    return await Axios.post(url, {params})
-}
+Axios.interceptors.request.use(
+    (config) => {
+
+        const token =
+            typeof window !== "undefined"
+                ? localStorage.getItem("token")
+                : null;
+
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
