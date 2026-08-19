@@ -17,12 +17,12 @@ const DeleteVinylDialog = ({ isOpen }) => {
         await Axios.delete(`vinyl/delete/${state.row.id}`);
 
         dispatch({
-            type: listAction.RELOAD,
-            payload: true
+            type: listAction.RESET
         });
 
         dispatch({
-            type: listAction.RESET
+            type: listAction.RELOAD,
+            payload: true
         });
     };
 

@@ -37,11 +37,10 @@ export const UpdateVinylDialog = ({ isOpen }) => {
         setValue("id", state.row?.id);
         setValue("title", state.row?.title);
         setValue("releaseYear", state.row?.releaseYear);
-        setValue("userId", state.row?.userId);
-        setValue("artistId", state.row?.artistId);
-        setValue("genreIds", state.row?.genreIds?.join(","));
         setValue("available", state.row?.available);
         setValue("rentedUntil", state.row?.rentedUntil);
+        setValue("artistId", state.row.artistId);
+        setValue("genreIds", state.row.genreIds);
     }, [state, setValue]);
 
     const onSubmit = async (data) => {
@@ -50,16 +49,17 @@ export const UpdateVinylDialog = ({ isOpen }) => {
             id: Number(data.id),
             title: data.title,
             releaseYear: Number(data.releaseYear),
-            userId: Number(data.userId),
-            artistId: Number(data.artistId),
-            genreIds: data.genreIds
-                .split(",")
-                .map(id => Number(id.trim())),
             available: data.available || null,
-            rentedUntil: data.rentedUntil || null
+            rentedUntil: data.rentedUntil || null,
+            artistId: state.row.artistId,
+            genreIds: state.row.genreIds,
         };
 
         await Axios.put("vinyl/update", vinyl);
+
+        dispatch({
+            type: listAction.RESET
+        });
 
         dispatch({
             type: listAction.RELOAD,
@@ -127,52 +127,6 @@ export const UpdateVinylDialog = ({ isOpen }) => {
                             {errors?.releaseYear && (
                                 <span className="text-danger">
                             {errors.releaseYear.message}
-                        </span>
-                            )}
-                        </Col>
-
-
-                        {/* ARTIST */}
-                        <Col md={6} className="mb-3">
-                            <label className="form-label">
-                                Artist
-                            </label>
-
-                            <input
-                                type="number"
-                                className="form-control"
-                                placeholder="Artist ID"
-                                {...register("artistId", {
-                                    required: "Artist is required"
-                                })}
-                            />
-
-                            {errors?.artistId && (
-                                <span className="text-danger">
-                            {errors.artistId.message}
-                        </span>
-                            )}
-                        </Col>
-
-
-                        {/* GENRES */}
-                        <Col md={6} className="mb-3">
-                            <label className="form-label">
-                                Genres
-                            </label>
-
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Genre IDs (example: 2, 3)"
-                                {...register("genreIds", {
-                                    required: "Genre is required"
-                                })}
-                            />
-
-                            {errors?.genreIds && (
-                                <span className="text-danger">
-                            {errors.genreIds.message}
                         </span>
                             )}
                         </Col>
