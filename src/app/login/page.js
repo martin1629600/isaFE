@@ -3,11 +3,11 @@
 import {Row, Col, Button, Card, CardBody} from "reactstrap";
 import {useForm} from "react-hook-form";
 import {Axios} from "../../core/httpClient";
-import {useRouter} from "next/navigation";
+import {useState} from "react";
 
 export default function Login() {
 
-    const router = useRouter();
+    const [loginError, setLoginError] = useState("");
 
     const {
         register,
@@ -28,7 +28,6 @@ export default function Login() {
                             Login
                         </h2>
 
-                        {/* EMAIL */}
                         <div className="mb-3">
                             <label className="form-label">
                                 Email
@@ -50,7 +49,6 @@ export default function Login() {
                             )}
                         </div>
 
-                        {/* PASSWORD */}
                         <div className="mb-4">
                             <label className="form-label">
                                 Password
@@ -72,7 +70,12 @@ export default function Login() {
                             )}
                         </div>
 
-                        {/* LOGIN BUTTON */}
+                        {loginError && (
+                            <div className="alert alert-danger">
+                                {loginError}
+                            </div>
+                        )}
+
                         <Button
                             color="primary"
                             className="w-100"
@@ -80,16 +83,32 @@ export default function Login() {
                             onClick={() => {
                                 handleSubmit(async (data) => {
 
-                                    const result = await Axios.post(
-                                        "/auth/login",
-                                        data
-                                    );
+                                    try {
+                                        setLoginError("");
 
-                                    localStorage.setItem(
-                                        "token",
-                                        result.data
-                                    );
-                                    window.location.href = "/";
+                                        const result = await Axios.post(
+                                            "/auth/login",
+                                            data
+                                        );
+
+                                        localStorage.setItem(
+                                            "token",
+                                            result.data
+                                        );
+
+                                        window.location.href = "/";
+
+                                    } catch (error) {
+
+                                        if (
+                                            error.response?.status === 401 ||
+                                            error.response?.status === 403
+                                        ) {
+                                            setLoginError(
+                                                "Email or password is incorrect."
+                                            );
+                                        }
+                                    }
 
                                 })();
                             }}
