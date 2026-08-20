@@ -15,8 +15,16 @@ export const getRole = () => {
 
     const payload = token.split(".")[1];
 
+    if (!payload) {
+        return null;
+    }
+
+    const base64 = payload
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+
     const decodedPayload = JSON.parse(
-        atob(payload)
+        atob(base64)
     );
 
     return decodedPayload.role;

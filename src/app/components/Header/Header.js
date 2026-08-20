@@ -2,21 +2,30 @@
 
 import Link from "next/link";
 import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation";
+import {isAdmin} from "../../../core/auth";
 
 export default function Header() {
 
     const [loggedIn, setLoggedIn] = useState(false);
-    const router = useRouter();
+    const [admin, setAdmin] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
+
         setLoggedIn(!!token);
+
+        if (token) {
+            setAdmin(isAdmin());
+        }
     }, []);
 
     const logout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+
         setLoggedIn(false);
+        setAdmin(false);
+
         window.location.href = "/login";
     };
 
@@ -46,6 +55,15 @@ export default function Header() {
                             className="me-3 py-2 text-dark text-decoration-none"
                         >
                             Login
+                        </Link>
+                    )}
+
+                    {admin && (
+                        <Link
+                            href="/vinyl/create"
+                            className="me-3 py-2 text-dark text-decoration-none"
+                        >
+                            Create Vinyl
                         </Link>
                     )}
 

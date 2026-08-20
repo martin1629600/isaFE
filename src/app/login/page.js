@@ -93,7 +93,12 @@ export default function Login() {
 
                                         localStorage.setItem(
                                             "token",
-                                            result.data
+                                            result.data.accessToken
+                                        );
+
+                                        localStorage.setItem(
+                                            "refreshToken",
+                                            result.data.refreshToken
                                         );
 
                                         window.location.href = "/";

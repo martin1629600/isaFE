@@ -39,8 +39,6 @@ export const UpdateVinylDialog = ({ isOpen }) => {
         setValue("releaseYear", state.row?.releaseYear);
         setValue("available", state.row?.available);
         setValue("rentedUntil", state.row?.rentedUntil);
-        setValue("artistId", state.row.artistId);
-        setValue("genreIds", state.row.genreIds);
     }, [state, setValue]);
 
     const onSubmit = async (data) => {
@@ -49,10 +47,11 @@ export const UpdateVinylDialog = ({ isOpen }) => {
             id: Number(data.id),
             title: data.title,
             releaseYear: Number(data.releaseYear),
-            available: data.available || null,
-            rentedUntil: data.rentedUntil || null,
-            artistId: state.row.artistId,
-            genreIds: state.row.genreIds,
+            available: data.available ,
+            rentedUntil:
+                data.available
+                    ? null
+                    : data.rentedUntil || null
         };
 
         await Axios.put("vinyl/update", vinyl);
@@ -84,7 +83,6 @@ export const UpdateVinylDialog = ({ isOpen }) => {
 
                     <Row>
 
-                        {/* TITLE */}
                         <Col md={6} className="mb-3">
                             <label className="form-label">
                                 Title
@@ -108,8 +106,6 @@ export const UpdateVinylDialog = ({ isOpen }) => {
                             )}
                         </Col>
 
-
-                        {/* RELEASE YEAR */}
                         <Col md={6} className="mb-3">
                             <label className="form-label">
                                 Release Year
@@ -131,8 +127,6 @@ export const UpdateVinylDialog = ({ isOpen }) => {
                             )}
                         </Col>
 
-
-                        {/* RENTED UNTIL */}
                         <Col md={6} className="mb-3">
                             <label className="form-label">
                                 Rented Until
@@ -146,7 +140,6 @@ export const UpdateVinylDialog = ({ isOpen }) => {
                         </Col>
 
 
-                        {/* AVAILABLE */}
                         <Col
                             md={6}
                             className="mb-3 d-flex align-items-end"
